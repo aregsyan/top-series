@@ -25,7 +25,7 @@ For running the service:
   
  **THE API**
  
-  `GET /topEpisodes/:seriesId` returns the top episodes for specified series
+  `GET /topEpisodes/:seriesId` returns the top episodes for specified series  
   `GET /analytics/popularSeries` returns the metrics for series accessed via API.
 
 
