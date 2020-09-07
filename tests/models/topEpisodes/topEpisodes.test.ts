@@ -1,6 +1,6 @@
 import testCases from './testCases';
 import {tmdbFetcher, mongoDb} from '../../../src/lib';
-import {TopEpisodesService} from '../../../src/services';
+import {TopEpisodesService, PopularSeriesService} from '../../../src/services';
 
 const getTvDetails = jest.spyOn(tmdbFetcher, 'getTvDetails') as jest.Mock<any>;
 const getSeasonDetails = jest.spyOn(tmdbFetcher, 'getSeasonDetails')  as jest.Mock<any>;
@@ -10,7 +10,7 @@ jest
     .spyOn(TopEpisodesService.prototype as any, 'saveEpisodesDb')
     .mockImplementation(() => {});
 jest
-    .spyOn(TopEpisodesService.prototype as any, 'saveReqCount')
+    .spyOn(PopularSeriesService as any, 'updateSeriesMetrics')
     .mockImplementation(() => {});
 jest
     .spyOn(TopEpisodesService.prototype as any, 'checkInDb')
