@@ -13,9 +13,8 @@ For running the service:
   Simple:
   1. Add in .env file the BEARER_TOKEN `TMDB_BEARER_TOKEN=your bearer token`
   2. Just run `make run`
-  
-  ** The application URL**
-  http://localhost:3000
+    
+  The application URL: http://localhost:3000
   
   Optionaly advenced:
     The database path `DB_PATH` by default is in `./mongodb` and mounted to container. It is possible to overwrite by doing `make run DB_PATH=your path to db`  
