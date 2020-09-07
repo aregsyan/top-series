@@ -1,6 +1,8 @@
 import {Db} from 'mongodb';
 import { PriorityQueue } from '../lib/';
 import {mongoDb, tmdbFetcher, utils} from '../lib';
+import {PopularSeriesService} from './';
+import constants from './constants';
 import {
     EpisodeInterface,
     SeasonInterface,
@@ -10,11 +12,10 @@ import {
 class TopEpisodes {
     private readonly seriesId: string;
     private seriesName: string = '';
-    private topEpisodesCollection: string = 'top_episodes';
-    private SeriesAccessCollection: string = 'series_access';
+    private static collection: string = constants.topEpisodes.dbCollection;
     private db!: Db;
     private pqueue: PriorityQueue<EpisodeInterface>;
-    private topCount = 20;
+    private static resLimit = constants.topEpisodes.resLimit;
 
     constructor(seriesId: string) {
         this.seriesId = seriesId;
@@ -45,29 +46,17 @@ class TopEpisodes {
     }
 
     private async sendResponse(res: TopEpisodeResponseInterface) {
-        this.saveReqCount();
+        PopularSeriesService.updateSeriesMetrics(this.seriesId, this.seriesName);
         return res;
     }
 
     private async checkInDb(): Promise<TopEpisodeResponseInterface|null> {
-        const dataDb = await this.db.collection(this.topEpisodesCollection).findOne({seriesId: this.seriesId});
+        const dataDb = await this.db.collection(TopEpisodes.collection).findOne({seriesId: this.seriesId});
         if (dataDb) {
             const {data}: {data: TopEpisodeResponseInterface} = dataDb;
             return data;
         }
         return null;
-    }
-
-    private async saveReqCount() {
-        const series = await this.db.collection(this.SeriesAccessCollection).findOne({seriesId: this.seriesId});
-        if(!series) {
-            const insert = {seriesId: this.seriesId, seriesName: this.seriesName, accessCount: 1};
-            return this.db.collection(this.SeriesAccessCollection).insertOne(insert);
-        } else {
-            const f = {_id: series._id};
-            const u = {$inc: {accessCount: 1}};
-            return this.db.collection(this.SeriesAccessCollection).updateOne(f, u);
-        }
     }
 
     private async getSeasons(): Promise<SeasonInterface[]> {
@@ -83,11 +72,11 @@ class TopEpisodes {
 
     private async saveEpisodesDb(data: TopEpisodeResponseInterface): Promise<void> {
         const insert = {seriesId: this.seriesId, data};
-        await this.db.collection(this.topEpisodesCollection).insertOne(insert);
+        await this.db.collection(TopEpisodes.collection).insertOne(insert);
     }
 
     private selectTopEpisodes(): EpisodeInterface[] {
-        return Array.from(Array(this.topCount)).map((it) => {
+        return Array.from(Array(TopEpisodes.resLimit)).map((it) => {
             try {
                 return this.pqueue.dequeue();
             } catch (e) {

@@ -1,7 +1,7 @@
 import axios from 'axios';
-import configs from '../../../config';
+import configs from '../../config';
 import {Headers} from './interfaces';
-import {HttpException} from '../..';
+import {HttpException} from '../';
 
 class TmdbFetcher {
     readonly headers: Headers;

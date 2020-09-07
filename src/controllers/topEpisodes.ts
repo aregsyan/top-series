@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response, Router,} from 'express';
 import {RouteInterface, TopEpisodeResponseInterface} from '../interfaces';
-import {TopEpisodesModel} from '../models';
-// import {cacheMiddleware} from '../middlewares';
+import {TopEpisodesService} from '../services';
 import {HttpException, NotFoundException} from '../lib';
 
 class TopEpisodesRouter implements RouteInterface {
@@ -20,7 +19,7 @@ class TopEpisodesRouter implements RouteInterface {
     private async getTopEpisodes(req: Request, res: Response, next: NextFunction) {
         const {seriesId} = req.params;
         try {
-            const instance: TopEpisodesModel = new TopEpisodesModel(seriesId);
+            const instance: TopEpisodesService = new TopEpisodesService(seriesId);
             const result: TopEpisodeResponseInterface = await instance.getTopEpisodes();
             res.json(result);
         } catch (e) {

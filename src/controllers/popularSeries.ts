@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response, Router,} from 'express';
 import {PopularSeriesResponseInterface, RouteInterface} from '../interfaces';
-import {PopularSeriesModel} from '../models';
+import {PopularSeriesService} from '../services';
 import {HttpException} from '../lib';
 
 class PopularSeriesRouter implements RouteInterface {
@@ -18,7 +18,7 @@ class PopularSeriesRouter implements RouteInterface {
 
     private async getPopularSeries(req: Request, res: Response, next: NextFunction) {
         try {
-            const instance: PopularSeriesModel = new PopularSeriesModel();
+            const instance: PopularSeriesService = new PopularSeriesService();
             const result: PopularSeriesResponseInterface = await instance.getPopularSeries();
             res.json(result);
         } catch (e) {

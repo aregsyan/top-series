@@ -1,8 +1,6 @@
 import express from 'express';
 import {mongoDb} from '../lib';
 import {ErrorMiddleware} from '../middlewares';
-import routes from '../routes';
-import {RouteInterface} from '../interfaces';
 
 class App {
     public app: express.Application;

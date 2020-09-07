@@ -1,37 +1,49 @@
 import testCases from './testCases';
 import {tmdbFetcher, mongoDb} from '../../../src/lib';
-import {TopEpisodesModel} from '../../../src/models';
+import {TopEpisodesService} from '../../../src/services';
 
 const getTvDetails = jest.spyOn(tmdbFetcher, 'getTvDetails') as jest.Mock<any>;
 const getSeasonDetails = jest.spyOn(tmdbFetcher, 'getSeasonDetails')  as jest.Mock<any>;
 mongoDb.getDB = jest.fn();
 
 jest
-    .spyOn(TopEpisodesModel.prototype as any, 'saveEpisodesDb')
+    .spyOn(TopEpisodesService.prototype as any, 'saveEpisodesDb')
     .mockImplementation(() => {});
 jest
-    .spyOn(TopEpisodesModel.prototype as any, 'saveReqCount')
+    .spyOn(TopEpisodesService.prototype as any, 'saveReqCount')
     .mockImplementation(() => {});
 jest
-    .spyOn(TopEpisodesModel.prototype as any, 'checkInDb')
+    .spyOn(TopEpisodesService.prototype as any, 'checkInDb')
     .mockImplementation(() => {});
 
 
 describe('Top Episodes', () => {
-    Object.values(testCases).forEach(testCase => {
-        it(testCase.test, async () => {
-            const seriesId = testCase.seriesId;
-            getTvDetails.mockReturnValueOnce(testCase.tvDetails);
-            getSeasonDetails.mockReturnValueOnce(testCase.seasonsDetails[0]);
-            getSeasonDetails.mockReturnValueOnce(testCase.seasonsDetails[1]);
-            getSeasonDetails.mockReturnValueOnce(testCase.seasonsDetails[2]);
-            const instance = new TopEpisodesModel(seriesId);
+        it('Return 20 episodes in case of more then 20 episodes', async () => {
+            const seriesId = testCases.case1.seriesId;
+            getTvDetails.mockReturnValueOnce(testCases.case1.tvDetails);
+            getSeasonDetails.mockReturnValueOnce(testCases.case1.seasonsDetails[0]);
+            getSeasonDetails.mockReturnValueOnce(testCases.case1.seasonsDetails[1]);
+            getSeasonDetails.mockReturnValueOnce(testCases.case1.seasonsDetails[2]);
+            const instance = new TopEpisodesService(seriesId);
             const result = await instance.getTopEpisodes();
             // @ts-ignore
             const res = result.episodes.map(it => it.averageVotes);
-            const dres = testCase.result.episodes
+            const dres = testCases.case1.result.episodes
                 .map((it) => it.averageVotes);
             expect(res).toEqual(dres);
         });
-    });
+        it('Return less then 20 episodes in case of less then 20 episodes', async () => {
+            const seriesId = testCases.case2.seriesId;
+            getTvDetails.mockReturnValueOnce(testCases.case2.tvDetails);
+            getSeasonDetails.mockReturnValueOnce(testCases.case2.seasonsDetails[0]);
+            getSeasonDetails.mockReturnValueOnce(testCases.case2.seasonsDetails[1]);
+            getSeasonDetails.mockReturnValueOnce(testCases.case2.seasonsDetails[2]);
+            const instance = new TopEpisodesService(seriesId);
+            const result = await instance.getTopEpisodes();
+            // @ts-ignore
+            const res = result.episodes.map(it => it.averageVotes);
+            const dres = testCases.case2.result.episodes
+                .map((it) => it.averageVotes);
+            expect(res).toEqual(dres);
+        });
 });

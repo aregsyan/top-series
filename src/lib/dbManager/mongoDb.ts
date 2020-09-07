@@ -1,5 +1,5 @@
 import {Db, MongoClient} from 'mongodb';
-import configs from '../../../config';
+import configs from '../../config';
 
 class MongoDB {
     url: string;
