@@ -1,0 +1,42 @@
+{
+  "name": "top_series",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app/index.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/main.ts",
+    "jest:clearCache": "./node_modules/.bin/jest --clearCache",
+    "test": "./node_modules/.bin/jest --clearCache && jest",
+    "test:watch": "./node_modules/.bin/jest --watch"
+  },
+  "author": "asarinyan",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.0.2",
+    "@types/express": "^4.17.8",
+    "@types/mongodb": "^3.5.27",
+    "axios": "^0.20.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.13",
+    "husky": "^4.2.5",
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4",
+    "ts-jest": "^26.3.0",
+    "ts-node": "^9.0.0"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+version: '3.6'
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    cap_add:
+      - ALL
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    env_file:
+      - .env
+    container_name: top-series-app
+    depends_on:
+      - db
+    volumes:
+      - ${LOG_PATH}:/var/log/top-series
+      - ./src/:/app/src/
+    networks:
+      local-net:
+        aliases:
+          - app
+  db:
+    image: mongo
+    restart: always
+    cap_add:
+      - ALL
+    env_file:
+      - .env
+    container_name: top-series-db
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - ./db/mongod.conf:/etc/mongod.conf:ro
+      - ${DB_PATH}:/data/db
+      - ${LOG_PATH}:/var/log/mongodb
+    networks:
+      local-net:
+        aliases:
+          - db
+networks:
+  local-net:
+    external: false
