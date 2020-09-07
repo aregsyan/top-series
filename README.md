@@ -11,7 +11,7 @@ Prerequirements:
 **How to Start**  
 For running the service:  
   Simple:
-  1. Add in .env file the BEARER_TOKEN `TWITTER_BEARER_TOKEN=your bearer token`
+  1. Add in .env file the BEARER_TOKEN `TMDB_BEARER_TOKEN=your bearer token`
   2. Just run `make run`
   
   Optionaly advenced:
